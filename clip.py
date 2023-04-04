@@ -11,6 +11,13 @@ class Clippy:
             self.folder = ""
         self.output = output
 
+    def textonimage(self,text,image):
+        
+        input_image = self.folder + image
+        output_image = self.folder + self.output + "." + image.split(".")[1]
+        imagemagick_cmd = ['convert', input_image, '-gravity', 'south', '-size', '70%x30%', '-background', '#0008', '-fill', 'white', '-font', 'Helvetica', '-pointsize', '30%', '-gravity', 'center', '-geometry', '+0+20', '-annotate', '+0+0', text, output_image]
+
+        subprocess.run(imagemagick_cmd)
     def imageaudiotovid(self,image,audio):
         input_image = self.folder +image
         input_audio = self.folder +audio
@@ -38,7 +45,8 @@ class Clippy:
 # text = "Okay! What if the text is really long,\
 #  and I mean like- REALLY LONG! XD HAHA I feel like there are a lot of \
 # very long lines in league lol\n-Ashe"
-# clip.textonvideo(text,clip.imageaudiotovid("image.jpg","audio.ogg"))
+# # clip.textonvideo(text,clip.imageaudiotovid("image.jpg","audio.ogg"))
+# clip.textonimage(text,"Aatrox.jpg")
 
 
 
