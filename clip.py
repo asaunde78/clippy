@@ -24,7 +24,7 @@ class Clippy:
         ffmpeg_cmd = ['ffmpeg', '-y','-loop', '1', '-i', input_image, '-i', input_audio, '-filter:v', "scale=w=1024:h=trunc(ow/a/2)*2", '-c:v', 'libx264', '-tune', 'stillimage', '-c:a', 'aac', '-b:a', '192k', '-pix_fmt', 'yuv420p', '-shortest', output_video]
         subprocess.run(ffmpeg_cmd)
         return self.output + ".mp4"
-    def imagestogif(self,images,framerate = 1):
+    def imagestogif(self,images,framerate = 24):
         input_image = self.folder + images
         output_gif = self.folder + self.output  + ".gif"
         ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),  output_gif]
