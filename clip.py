@@ -15,8 +15,7 @@ class Clippy:
         
         input_image = self.folder + image
         output_image = self.folder + self.output + "." + image.split(".")[1]
-        imagemagick_cmd = ['convert', input_image, '-gravity', 'south', '-size', '70%x30%', '-background', '#0008', '-fill', 'white', '-font', 'Helvetica', '-pointsize', '30%', '-gravity', 'center', '-geometry', '+0+20', '-annotate', '+0+0', text, output_image]
-
+        imagemagick_cmd = ['convert', input_image,'-size', '70%x150', 'caption:' + text, '-background', 'transparent', '-gravity', 'South', '-pointsize', '24', '-fill', 'white', '-stroke', 'black', '-strokewidth', '1','-composite', output_image]
         subprocess.run(imagemagick_cmd)
     def imageaudiotovid(self,image,audio):
         input_image = self.folder +image
@@ -25,7 +24,13 @@ class Clippy:
         ffmpeg_cmd = ['ffmpeg', '-y','-loop', '1', '-i', input_image, '-i', input_audio, '-filter:v', "scale=w=1024:h=trunc(ow/a/2)*2", '-c:v', 'libx264', '-tune', 'stillimage', '-c:a', 'aac', '-b:a', '192k', '-pix_fmt', 'yuv420p', '-shortest', output_video]
         subprocess.run(ffmpeg_cmd)
         return self.output + ".mp4"
-
+    def imagestogif(self,images,framerate = 1):
+        input_image = self.folder + images
+        output_gif = self.folder + self.output  + ".gif"
+        ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),  output_gif]
+        subprocess.run(ffmpeg_cmd)
+        return self.output  + ".gif"
+        
     def textonvideo(self,text,video,fontsize = 24,font="Arial",align=2):
         
         with open("subtitles.srt" ,"w") as r:
@@ -45,7 +50,7 @@ class Clippy:
 # text = "Okay! What if the text is really long,\
 #  and I mean like- REALLY LONG! XD HAHA I feel like there are a lot of \
 # very long lines in league lol\n-Ashe"
-# # clip.textonvideo(text,clip.imageaudiotovid("image.jpg","audio.ogg"))
+# # # clip.textonvideo(text,clip.imageaudiotovid("image.jpg","audio.ogg"))
 # clip.textonimage(text,"Aatrox.jpg")
 
 
