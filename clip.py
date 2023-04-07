@@ -27,7 +27,7 @@ class Clippy:
     def imagestogif(self,images,framerate = 24):
         input_image = self.folder + images
         output_gif = self.folder + self.output  + ".gif"
-        ffmpeg_cmd = ['ffmpeg', '-y','-fs','7.9M','-i', input_image, "-r", str(framerate),  output_gif]
+        ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-fs','7.9M',  output_gif]
         subprocess.run(ffmpeg_cmd)
         return self.output  + ".gif"
         
