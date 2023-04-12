@@ -30,13 +30,13 @@ class Clippy:
             input_image = self.folder + images
             output_gif = self.folder + self.output  + ".gif"
             # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
-            ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','20M',  output_gif]
+            ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
         else:
         
 
             output_gif = self.folder + self.output  + ".gif"
             # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
-            ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{filetype}", "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','20M',  output_gif]
+            ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{filetype}", "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
         
 
         subprocess.run(ffmpeg_cmd)
