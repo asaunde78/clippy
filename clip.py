@@ -24,11 +24,21 @@ class Clippy:
         ffmpeg_cmd = ['ffmpeg', '-y','-loop', '1', '-i', input_image, '-i', input_audio, '-filter:v', "scale=w=1024:h=trunc(ow/a/2)*2", '-c:v', 'libx264', '-tune', 'stillimage', '-c:a', 'aac', '-b:a', '192k', '-pix_fmt', 'yuv420p', '-shortest', output_video]
         subprocess.run(ffmpeg_cmd)
         return self.output + ".mp4"
-    def imagestogif(self,images,frametiming = 1):
-        input_image = self.folder + images
-        output_gif = self.folder + self.output  + ".gif"
-        # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
-        ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r",f"{len(images)}",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7.9M',  output_gif]
+    def imagestogif(self,images,glob=False,filetype="jpg",frametiming = 1):
+    
+        if(not glob):
+            input_image = self.folder + images
+            output_gif = self.folder + self.output  + ".gif"
+            # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
+            ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','23M',  output_gif]
+        else:
+        
+
+            output_gif = self.folder + self.output  + ".gif"
+            # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
+            ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{filetype}", "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','23M',  output_gif]
+        
+
         subprocess.run(ffmpeg_cmd)
         return self.output  + ".gif"
         
@@ -45,17 +55,3 @@ class Clippy:
 
         subprocess.run(ffmpeg_cmd)
         return self.output + '_text.mp4'
-
-# clip = Clippy()
-
-# text = "Okay! What if the text is really long,\
-#  and I mean like- REALLY LONG! XD HAHA I feel like there are a lot of \
-# very long lines in league lol\n-Ashe"
-# # # clip.textonvideo(text,clip.imageaudiotovid("image.jpg","audio.ogg"))
-# clip.textonimage(text,"Aatrox.jpg")
-
-
-
-
-
-
