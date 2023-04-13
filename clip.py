@@ -24,24 +24,24 @@ class Clippy:
         ffmpeg_cmd = ['ffmpeg', '-y','-loop', '1', '-i', input_image, '-i', input_audio, '-filter:v', "scale=w=1024:h=trunc(ow/a/2)*2", '-c:v', 'libx264', '-tune', 'stillimage', '-c:a', 'aac', '-b:a', '192k', '-pix_fmt', 'yuv420p', '-shortest', output_video]
         subprocess.run(ffmpeg_cmd)
         return self.output + ".mp4"
-    def imagestogif(self,images,glob=False,filetype="jpg",frametiming = 1):
-    
-        if(not glob):
-            input_image = self.folder + images
-            output_gif = self.folder + self.output  + ".gif"
-            # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
-            ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
-        else:
-        
-
-            output_gif = self.folder + self.output  + ".gif"
-            # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
-            ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{filetype}", "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
-        
-
-        subprocess.run(ffmpeg_cmd)
+    def imagestogif(self,delay = 10,filesize=7):
+        output_gif = self.folder + self.output  + ".gif"
+        imagemagick_command = ["convert","-delay",f"{delay}","-loop","0",'-resize',"800x600!",self.folder+"*.png",self.folder+"*.jpeg",self.folder+"*.jpg", '-define',f"-target-size={filesize}MB", output_gif]
+        subprocess.run(imagemagick_command)
         return self.output  + ".gif"
-        
+        # if(engine == "ff"):
+        #     if(not glob):
+        #         input_image = self.folder + images
+        #         # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
+        #         ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
+        #     else:
+            
+
+                
+        #         # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
+        #         ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{filetype}", "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
+
+     
     def textonvideo(self,text,video,fontsize = 24,font="Arial",align=2):
         
         with open("subtitles.srt" ,"w") as r:
