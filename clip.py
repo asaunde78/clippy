@@ -1,5 +1,5 @@
 import subprocess
-
+import math
 # Set the input and output file paths
 # Set the input and output file paths
 
@@ -40,8 +40,30 @@ class Clippy:
                 
         #         # ffmpeg_cmd = ['ffmpeg', '-y','-i', input_image, "-r", str(framerate),'-delay',f'{delay}','-vf',f"setpts=(1/{frametiming})*PTS",'-fs','7.9M',  output_gif]
         #         ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{filetype}", "-r","24",'-vf', f"setpts=(1/{frametiming})*PTS", '-fs','7M',  output_gif]
-
-     
+    def ffimagestogif(self,frametiming=.4,filesize=15,ftype="jpg"):
+        output_gif = self.folder + self.output  + ".gif"
+        
+        ffmpeg_cmd = ['ffmpeg', '-y', "-pattern_type","glob",'-i',self.folder+f"*.{ftype}", "-r","60",'-vf', f"setpts=({frametiming})*PTS", '-fs',f'{filesize}M',  output_gif]
+        subprocess.run(ffmpeg_cmd)
+        return self.output  + ".gif"
+    def imagestocollage(self,filesize=10, count=None,squares=True):
+        ftype = "jpeg"
+        output_image = self.folder + self.output + f".{ftype}"
+        if count:
+            rows = int(math.ceil(count**0.5))
+            cols = int(math.ceil(count / rows))
+            print(f"{rows}x{cols}")
+        imagemagick_command = ["montage", self.folder+"*.png",self.folder+"*.jpeg",self.folder+"*.jpg","-resize",("600x600!" if squares else "800x"),"-geometry", "+0+0", "-tile", (f"{rows}x{cols}" if count else "5x"), "-background","none",output_image]
+        subprocess.run(imagemagick_command)
+        return self.output + f".{ftype}"
+    def changeimagetype(self,ftype="jpg"):
+        types = ["jpg","jpeg","png"]
+        types.remove(ftype)
+        print(ftype,types)
+        imagemagick_command = ["mogrify","-format",ftype,f"{self.folder}*.{types[0]}",f"{self.folder}*.{types[1]}"]
+        subprocess.run(imagemagick_command)
+        return True
+        
     def textonvideo(self,text,video,fontsize = 24,font="Arial",align=2):
         
         with open("subtitles.srt" ,"w") as r:
